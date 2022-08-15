@@ -1,0 +1,132 @@
+html {
+  height: 100vh;
+  width: 100vw;
+}
+*{
+  font-family: 'Roboto', sans-serif;
+}
+
+.intro{
+  text-align: center;
+}
+
+
+
+
+/* slide-in effect */
+.slide_in{
+  animation: slidein 0.7s ease-in;
+}
+
+.slide_out{
+  transform: translate(50px);
+  animation: slideout .4s ease-out;
+}
+
+
+@keyframes slidein {
+  0%{
+    transform: skewX(53deg) translateX(-500px);
+    opacity: 0;
+  }
+  60%{
+    transform: translateX(0px);
+  }
+  62%{
+    transform: skewX(0deg) translateX(30px);
+  }
+  70%{
+    transform: skew(-20deg);
+    opacity: 1;
+  }
+  80%{
+    transform: skew(0deg) translateX(0);
+  }
+  90%{
+    transform: skew(-5deg);
+  }
+  100%{
+    transform: skewX(0deg);
+  }
+}
+
+@keyframes slideout {
+  0%{
+    transform: translateX(-15px);
+    opacity: 1;
+  }
+  60%{
+    transform: translateX(0px);
+  }
+  80%{
+    transform: translateX(100px);
+  }
+  100%{
+    opacity: 0;
+    transform: translateX(100px);
+  }
+}
+
+/* end of slide-in and slide-out effect */
+/* fade-in */
+
+.fade-in{
+  animation: fadeIn 3s;
+  -webkit-animation: fadeIn 3s;
+  -moz-animation: fadeIn 3s;
+  -o-animation: fadeIn 3s;
+  -ms-animation: fadeIn 3s;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@-moz-keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@-webkit-keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@-o-keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@-ms-keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+/* grid */
+
+#gameBoard{
+  max-width: 300px;
+  min-height: 300px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 10px;
+  margin: auto;
+  margin-top: -350px;
+}
+
+.hidden{
+  opacity: 0;
+}
+
+.visible{
+  position: relative;
+}
+
+.gridItem{
+  background-color: pink;
+}
+
+.gridItem:hover {
+  background-color: red;
+}
