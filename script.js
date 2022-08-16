@@ -31,7 +31,7 @@ const gameBoard = (() => {
       //if it's the computer - check if the random space is filled before switching turns
       if (player.name == 'demagotron'){
         if (boardPositions[location] != OG_BOARD_POSITIONS[location]){
-          gameBoard.addMove(computer, Math.floor(Math.random()*(9)), label);
+          gameBoard.addMove(computer, Math.floor(Math.random()*(9)), computer.label);
         }
         else {
           turnTracker = false;
@@ -58,11 +58,13 @@ const gameBoard = (() => {
     if (checkForWinner(player, boardPositions) == true){
       console.log(player.name + 'wins');
       endGame = true;
+      showRestart();
     }
     else {
       if (checkForTie(player, boardPositions) == true){
         console.log('its a tie!');
         endGame = true;
+        showRestart();
       }
     }
   }
@@ -83,8 +85,30 @@ const gameBoard = (() => {
       }
     }
   }
+
+  const clearGameBoard = () => {
+    //refresh board positions
+    boardPositions = [
+      0, 1, 2,
+      3, 4, 5,
+      6, 7, 8,
+    ];
+
+    //clear all the labels from the page
+    for(let a = 0; a < gridItem.length; a++){
+      gridItem[a].innerHTML = '';
+    }
+
+    //set trackers back to their defaults
+    endGame = false;
+    turnTracker = false;
+
+    //hide the refresh button again
+    restart.classList.add('hidden');
+  }
   return {
-    addMove
+    addMove,
+    clearGameBoard,
   };
 
 })();
@@ -103,6 +127,11 @@ function showBoard(){
   gameBoardUI.classList.add('visible');
 }
 
+function showRestart(){
+  restart.classList.remove('hidden');
+  restart.classList.add('fade-in');
+}
+
 let gridItem = document.querySelectorAll('.gridItem');
   for(let i =0; i < gridItem.length; i++){
     gridItem[i].addEventListener('click', function(){
@@ -114,7 +143,8 @@ let gridItem = document.querySelectorAll('.gridItem');
     });
   }
 
-
+let restart = document.getElementById('restartButton');
+restart.addEventListener('click', gameBoard.clearGameBoard)
 
 const introGraphic = document.querySelector('.intro');
 const gameBoardUI = document.getElementById('gameBoard');
@@ -124,5 +154,3 @@ document.addEventListener('click', showBoard);
 //we could adjust the name here to be == to input from DOM
 const user = player('paige', 'x');
 const computer = player('demagotron', 'o');
-
-//add an event listener onto each button
