@@ -54,11 +54,17 @@ const gameBoard = (() => {
     //update boardPositions array
   }
   const updateBoard = (player, boardPositions, location, label) => {
-    gridItem[location].innerHTML = label;
+    //if the it is the computer, add a 2 second delay
+    if (player.name == 'demagotron'){
+      setTimeout(function(){gridItem[location].innerHTML = label;},1000);
+    }
+    else{
+      gridItem[location].innerHTML = label;
+    }
     if (checkForWinner(player, boardPositions) == true){
-      console.log(player.name + 'wins');
-      endGame = true;
-      showRestart();
+        console.log(player.name + 'wins');
+        endGame = true;
+        showRestart();
     }
     else {
       if (checkForTie(player, boardPositions) == true){
