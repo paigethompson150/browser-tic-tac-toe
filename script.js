@@ -1,9 +1,3 @@
-//set gameboard as an array inside of a gameboard module
-//const gameboard = (() => {
-//  
-//}
-
-//set player as a factory
 
 //winning combinations
 const WIN_COMBOS = [
@@ -18,17 +12,22 @@ const WIN_COMBOS = [
 //module used for keeping track of and updating board positions
 const gameBoard = (() => {
   boardPositions = [
-    'n', 'n', 'n',
-    'n', 'n', 'n',
-    'n', 'n', 'n',
+    'x', '', '',
+    '', 'x', '',
+    '', '', 'x',
   ];
-  const addMove = (player, location) => {
-    console.log(location);
+  const addMove = (player, location, label) => {
+    boardPositions[location] = label;
+    updateBoard(boardPositions, location, label);
     //player makes move here
     //update boardPositions array
   }
+  const updateBoard = (boardPositions, location, label) => {
+    gridItem[location].innerHTML = label;
+  }
   return {
-    addMove
+    addMove,
+    updateBoard
   };
 
 })();
@@ -54,17 +53,14 @@ document.addEventListener('click', showBoard);
 
 //create new user player
 //we could adjust the name here to be == to input from DOM
-const user = new player('paige', 'x');
+const user = player('paige', 'x');
+const computer = player('demagotron', 'o');
 
 //add an event listener onto each button
 let gridItem = document.querySelectorAll('.gridItem');
-
-function testFunc(){
-  console.log('testing');
-}
-
 for(let i =0; i < gridItem.length; i++){
   gridItem[i].addEventListener('click', function(){
-    gameBoard.addMove(user,);
+    //pass in the user info, as well as id of grid item pressed on
+    gameBoard.addMove(user, gridItem[i].id, user.label);
   });
 }

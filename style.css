@@ -130,3 +130,10 @@ html {
 .gridItem:hover {
   background-color: red;
 }
+
+.gridItem {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 80px;
+}
