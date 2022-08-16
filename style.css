@@ -124,19 +124,19 @@ html {
 }
 
 .gridItem{
-  background-color: pink;
-}
-
-.gridItem:hover {
-  background-color: red;
-}
-
-.gridItem {
+  background-color: lightblue;
+  transition: 0.5s;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 80px;
+  border-radius: 5px;
 }
+
+.gridItem:hover {
+  transform: scale(1.1);
+}
+
 
 
 /* restart button styling */
