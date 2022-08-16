@@ -12,22 +12,35 @@ const WIN_COMBOS = [
 //module used for keeping track of and updating board positions
 const gameBoard = (() => {
   boardPositions = [
-    'x', '', '',
-    '', 'x', '',
-    '', '', 'x',
+    0, 1, 2,
+    3, 4, 5,
+    6, 7, 8,
   ];
   const addMove = (player, location, label) => {
     boardPositions[location] = label;
-    updateBoard(boardPositions, location, label);
+    updateBoard(player, boardPositions, location, label);
     //player makes move here
     //update boardPositions array
   }
-  const updateBoard = (boardPositions, location, label) => {
+  const updateBoard = (player, boardPositions, location, label) => {
     gridItem[location].innerHTML = label;
+    if (checkForWinner(player, boardPositions) == true){
+      console.log(player.name + 'wins');
+    }
+  }
+  const checkForWinner = (player, boardPositions) => {
+    for(let k = 0; k < WIN_COMBOS.length; k++){
+      let item = WIN_COMBOS[k];
+      console.log(WIN_COMBOS[k]);
+      if (boardPositions[item[0]] == boardPositions[item[1]] && boardPositions[item[1]] == boardPositions[item[2]]){
+        return true;
+      }
+    }
   }
   return {
     addMove,
-    updateBoard
+    updateBoard,
+    checkForWinner
   };
 
 })();
