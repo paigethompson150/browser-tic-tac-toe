@@ -32,7 +32,7 @@ const gameBoard = (() => {
       if (player.name == 'demagotron'){
         if (boardPositions[location] != OG_BOARD_POSITIONS[location]){
           //if space is already full, go again.
-          gameBoard.addMove(computer, bestSpot(), computer.label);
+          gameBoard.addMove(computer, bestMove(), computer.label);
         }
         else {
           turnTracker = false;
@@ -116,6 +116,8 @@ const gameBoard = (() => {
   return {
     addMove,
     clearGameBoard,
+    checkForWinner,
+    checkForTie,
   };
 
 })();
@@ -139,26 +141,44 @@ function showRestart(){
   restart.classList.add('fade-in');
 }
 
-function availablePositions(){
- return (boardPositions.filter(s => typeof s == 'number'));
+//spot for our minimax algorithm
+function bestMove(){
+  let bestScore = -Infinity;
+  let bestPos;
+  for (let i = 0; i < boardPositions.length-1; i++){
+    if (typeof boardPositions[i] == 'number'){
+      boardPositions[i] = 'o';
+      let score = minimax(boardPositions);
+      boardPositions[i] = i;
+      if (score > bestScore) {
+        bestScore = score;
+        bestMove = boardPositions[i];
+      }
+    }
+  
+  }
+  //return availablePositions()[0];
+  //return minimax(boardPositions, computer).index;
+  return bestPos;
 }
 
-function bestSpot(){
-  //return first empty square
-  return availablePositions()[0];
+function minimax(board){
+  return 1;
 }
 
 let gridItem = document.querySelectorAll('.gridItem');
-  for(let i =0; i < gridItem.length; i++){
-    gridItem[i].addEventListener('click', function(){
-      //pass in the user info, as well as id of grid item pressed on
-      gameBoard.addMove(user, gridItem[i].id, user.label);
-      if (turnTracker === true){
-        console.log('best spot os' + bestSpot());
-        gameBoard.addMove(computer, bestSpot(), computer.label);
-      }
-    });
-  }
+for(let i =0; i < gridItem.length; i++){
+  gridItem[i].addEventListener('click', function(){
+    //pass in the user info, as well as id of grid item pressed on
+    gameBoard.addMove(user, gridItem[i].id, user.label);
+    if (turnTracker === true){
+      gameBoard.addMove(computer, bestMove(), computer.label);
+    }
+  });
+}
+
+
+
 
 let restart = document.getElementById('restartButton');
 restart.addEventListener('click', gameBoard.clearGameBoard)
