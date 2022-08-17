@@ -57,6 +57,7 @@ const gameBoard = (() => {
   const updateBoard = (player, boardPositions, location, label) => {
     //if the it is the computer, add a 2 second delay
     if (player.name == 'demagotron'){
+      console.log('location is ' + location);
       setTimeout(function(){gridItem[location].innerHTML = label;},1000);
     }
     else{
@@ -86,7 +87,6 @@ const gameBoard = (() => {
   const checkForWinner = (player, boardPositions) => {
     for(let k = 0; k < WIN_COMBOS.length; k++){
       let item = WIN_COMBOS[k];
-      console.log(WIN_COMBOS[k]);
       if (boardPositions[item[0]] == boardPositions[item[1]] && boardPositions[item[1]] == boardPositions[item[2]]){
         return true;
       }
@@ -140,12 +140,12 @@ function showRestart(){
 }
 
 function availablePositions(){
-  return boardPositions.filter(i => typeof s == 'number');
+ return (boardPositions.filter(s => typeof s == 'number'));
 }
 
 function bestSpot(){
   //return first empty square
-  return availablePositions()[0]
+  return availablePositions()[0];
 }
 
 let gridItem = document.querySelectorAll('.gridItem');
@@ -154,6 +154,7 @@ let gridItem = document.querySelectorAll('.gridItem');
       //pass in the user info, as well as id of grid item pressed on
       gameBoard.addMove(user, gridItem[i].id, user.label);
       if (turnTracker === true){
+        console.log('best spot os' + bestSpot());
         gameBoard.addMove(computer, bestSpot(), computer.label);
       }
     });
