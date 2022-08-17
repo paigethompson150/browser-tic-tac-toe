@@ -31,7 +31,8 @@ const gameBoard = (() => {
       //if it's the computer - check if the random space is filled before switching turns
       if (player.name == 'demagotron'){
         if (boardPositions[location] != OG_BOARD_POSITIONS[location]){
-          gameBoard.addMove(computer, Math.floor(Math.random()*(9)), computer.label);
+          //if space is already full, go again.
+          gameBoard.addMove(computer, bestSpot(), computer.label);
         }
         else {
           turnTracker = false;
@@ -138,13 +139,22 @@ function showRestart(){
   restart.classList.add('fade-in');
 }
 
+function availablePositions(){
+  return boardPositions.filter(i => typeof s == 'number');
+}
+
+function bestSpot(){
+  //return first empty square
+  return availablePositions()[0]
+}
+
 let gridItem = document.querySelectorAll('.gridItem');
   for(let i =0; i < gridItem.length; i++){
     gridItem[i].addEventListener('click', function(){
       //pass in the user info, as well as id of grid item pressed on
       gameBoard.addMove(user, gridItem[i].id, user.label);
       if (turnTracker === true){
-        gameBoard.addMove(computer, Math.floor(Math.random()*(9)), computer.label);
+        gameBoard.addMove(computer, bestSpot(), computer.label);
       }
     });
   }
