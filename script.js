@@ -2,6 +2,7 @@
 //winning combinations
 const WIN_COMBOS = [
   [0,1,2],
+  [1,4,7],
   [3,4,5],
   [6,7,8],
   [0,3,6],
@@ -30,15 +31,11 @@ const gameBoard = (() => {
     if (endGame === false){
       //if it's the computer - check if the random space is filled before switching turns
       if (player.name == 'demagotron'){
-        if (boardPositions[location] != OG_BOARD_POSITIONS[location]){
-          //if space is already full, go again.
-          gameBoard.addMove(computer, bestSpot(), computer.label);
-        }
-        else {
+
           turnTracker = false;
           boardPositions[location] = label;
           updateBoard(player, boardPositions, location, label);
-        }
+  
       }
       if (player.name != 'demagotron'){
         if((boardPositions[location] == OG_BOARD_POSITIONS[location])){
@@ -76,9 +73,19 @@ const gameBoard = (() => {
     }
   }
   const checkForTie = (player, boardPositions) => {
-    for(let n = 0; n < boardPositions.length; n++){
+    n = 0;
+    diffCounter = 0;
+    while (n < boardPositions.length){
       if (boardPositions[n] == OG_BOARD_POSITIONS[n]){
         return false;
+      }
+      else{
+        diffCounter ++;
+        console.log(diffCounter);
+        n +=1;
+        if (diffCounter == 9){
+          return true;
+        }
       }
     }
   }
@@ -86,7 +93,6 @@ const gameBoard = (() => {
   const checkForWinner = (player, boardPositions) => {
     for(let k = 0; k < WIN_COMBOS.length; k++){
       let item = WIN_COMBOS[k];
-      console.log(WIN_COMBOS[k]);
       if (boardPositions[item[0]] == boardPositions[item[1]] && boardPositions[item[1]] == boardPositions[item[2]]){
         return true;
       }
@@ -140,12 +146,13 @@ function showRestart(){
 }
 
 function availablePositions(){
-  return boardPositions.filter(i => typeof s == 'number');
+  return boardPositions.filter(s => typeof s == 'number');
 }
 
 function bestSpot(){
   //return first empty square
-  return availablePositions()[0]
+  emptySpots = availablePositions();
+  return emptySpots[Math.floor(Math.random()*emptySpots.length)];
 }
 
 let gridItem = document.querySelectorAll('.gridItem');
