@@ -1,5 +1,5 @@
 
-//winning combinations
+//Winning Combinations
 const WIN_COMBOS = [
   [0,1,2],
   [1,4,7],
@@ -11,34 +11,40 @@ const WIN_COMBOS = [
   [2,4,6]
 ]
 
+//Initial setup of a clear board, to use for comparison later.
 const OG_BOARD_POSITIONS = [
   0, 1, 2,
   3, 4, 5,
   6, 7, 8,
 ];
 
+//Setting the game tracker variables - one to track if the game has ended, one to keep track of whose turn it is
+//a false turn is the user, a true turn is the computer
 let endGame = false;
 let turnTracker = false;
-//module used for keeping track of and updating board positions
+
+//Module used for updating the board
 const gameBoard = (() => {
+  //Initializing the board
   boardPositions = [
     0, 1, 2,
     3, 4, 5,
     6, 7, 8,
   ];
-  const addMove = (player, location, label) => {
-    //if no winner has been declared yet
-    if (endGame === false){
-      //if it's the computer - check if the random space is filled before switching turns
-      if (player.name == 'demagotron'){
 
+  //Allows the player to add a move onto the board, or attempt to add a move
+  const addMove = (player, location, label) => {
+    if (endGame === false){
+      //If the player is the computer, change the turntracker and update the board index, as well as the UI.
+      if (player.name == 'demagotron'){
           turnTracker = false;
           boardPositions[location] = label;
           updateBoard(player, boardPositions, location, label);
   
       }
+      //If the player is the user and the board item is not taken, update it and update the UI.
       if (player.name != 'demagotron'){
-        if((boardPositions[location] == OG_BOARD_POSITIONS[location])){
+        if(gridItem[location].innerHTML.length == 0){
         turnTracker = true;
         boardPositions[location] = label;
         updateBoard(player, boardPositions, location, label);
@@ -48,31 +54,32 @@ const gameBoard = (() => {
         }
       }
     }
-    //player makes move here
-    //update boardPositions array
   }
+
+  //Update the UI of the board displayed on the HTML.
   const updateBoard = (player, boardPositions, location, label) => {
-    //if the it is the computer, add a 2 second delay
+    //Adding a 2 second delay for the computer's moves - to make it seem like it's thinking :).
     if (player.name == 'demagotron'){
       setTimeout(function(){gridItem[location].innerHTML = label;},1000);
     }
     else{
       gridItem[location].innerHTML = label;
     }
-    if (checkForWinner(player, boardPositions) == true){
+    if (checkForWinner() == true){
         console.log(player.name + 'wins');
-        endGame = true;
-        showRestart();
+      //  endGame = true;
+       // showRestart();
     }
     else {
-      if (checkForTie(player, boardPositions) == true){
+      if (checkForTie() == true){
         console.log('its a tie!');
-        endGame = true;
-        showRestart();
+      //  endGame = true;
+      //  showRestart();
       }
     }
   }
-  const checkForTie = (player, boardPositions) => {
+  //Returns true in a tie game
+  const checkForTie = () => {
     n = 0;
     diffCounter = 0;
     while (n < boardPositions.length){
@@ -81,7 +88,6 @@ const gameBoard = (() => {
       }
       else{
         diffCounter ++;
-        console.log(diffCounter);
         n +=1;
         if (diffCounter == 9){
           return true;
@@ -89,8 +95,8 @@ const gameBoard = (() => {
       }
     }
   }
-
-  const checkForWinner = (player, boardPositions) => {
+  //Returns true if a winning combination is present
+  const checkForWinner = () => {
     for(let k = 0; k < WIN_COMBOS.length; k++){
       let item = WIN_COMBOS[k];
       if (boardPositions[item[0]] == boardPositions[item[1]] && boardPositions[item[1]] == boardPositions[item[2]]){
@@ -100,38 +106,40 @@ const gameBoard = (() => {
   }
 
   const clearGameBoard = () => {
-    //refresh board positions
+    //Resets the boardPositions to its initial value.
     boardPositions = [
       0, 1, 2,
       3, 4, 5,
       6, 7, 8,
     ];
 
-    //clear all the labels from the page
+    //Clears all of the labels from the UI.
     for(let a = 0; a < gridItem.length; a++){
       gridItem[a].innerHTML = '';
     }
 
-    //set trackers back to their defaults
+    //Sets trackers back to their defaults.
     endGame = false;
     turnTracker = false;
 
-    //hide the refresh button again
+    //Hide the refresh button again.
     restart.classList.add('hidden');
   }
   return {
     addMove,
     clearGameBoard,
+    checkForTie,
+    checkForWinner,
   };
 
 })();
 
-//name can either be user/computer, label is x or o
+//Setting up the player constructor.
 const player = (name, label) => {
   return { name, label }
 }
 
-
+//Displays the board on the screen.
 function showBoard(){
   introGraphic.classList.add('slide_out');
   introGraphic.classList.add('hidden');
@@ -140,26 +148,87 @@ function showBoard(){
   gameBoardUI.classList.add('visible');
 }
 
+//Displays the restart button on the screen.
 function showRestart(){
   restart.classList.remove('hidden');
   restart.classList.add('fade-in');
 }
 
-function availablePositions(){
+//Returns the empty index positions on the board.
+function availablePositions(boardPositions){
   return boardPositions.filter(s => typeof s == 'number');
 }
 
 function bestSpot(){
-  //return first empty square
-  emptySpots = availablePositions();
-  return emptySpots[Math.floor(Math.random()*emptySpots.length)];
+  //return a random available square
+  let emptySpots = availablePositions(boardPositions);
+  let bestScore = -1000;
+  let bestMove = 0;
+
+  for (k = 0; k < emptySpots.length; k++){
+    newLocation = emptySpots[k];
+
+    boardPositions[newLocation] = 'o';
+    score = minimax(boardPositions,0,false);
+    boardPositions[newLocation] = location;
+
+    if(score > bestScore){
+      bestScore = score;
+      bestMove = newLocation;
+    }
+  }
+  return bestMove;
+  //return emptySpots[Math.floor(Math.random()*emptySpots.length)];
 }
 
+function minimax(boardPositions, isMaximizing){
+  if (gameBoard.checkForWinner() && turnTracker == true){
+    return 100;
+  }
+  else if (gameBoard.checkForWinner() && turnTracker == false){
+    return -100;
+  }
+  else if (gameBoard.checkForTie()){
+    return 0;
+  }
+  let emptySpots = availablePositions(boardPositions);
+  if (isMaximizing){
+    let bestScore = -1000;
+    for (k = 0; k < emptySpots.length; k++){
+      newLocation = emptySpots[k];
+  
+      boardPositions[newLocation] = 'x';
+      score = minimax(boardPositions,false);
+      boardPositions[newLocation] = location;
+      if(score > bestScore){
+        bestScore = score;
+      }
+    }
+    return bestScore;
+  }
+  else{
+    let bestScore = 800;
+    for (k = 0; k < emptySpots.length; k++){
+      newLocation = emptySpots[k];
+  
+      boardPositions[newLocation] = 'o';
+      score = minimax(boardPositions,true);
+      boardPositions[newLocation] = location;
+      if(score < bestScore){
+        bestScore = score;
+      }
+    }
+    return bestScore;
+
+  }
+}
+  
+//Adds event listeners on all of the grid items.
 let gridItem = document.querySelectorAll('.gridItem');
   for(let i =0; i < gridItem.length; i++){
     gridItem[i].addEventListener('click', function(){
-      //pass in the user info, as well as id of grid item pressed on
       gameBoard.addMove(user, gridItem[i].id, user.label);
+      //If it is the computer's turn, use the bestSpot function to find the location of the grid item.
       if (turnTracker === true){
         gameBoard.addMove(computer, bestSpot(), computer.label);
       }
@@ -173,7 +242,6 @@ const introGraphic = document.querySelector('.intro');
 const gameBoardUI = document.getElementById('gameBoard');
 document.addEventListener('click', showBoard);
 
-//create new user player
-//we could adjust the name here to be == to input from DOM
+
 const user = player('paige', 'x');
 const computer = player('demagotron', 'o');
