@@ -35,14 +35,14 @@ const gameBoard = (() => {
   //Allows the player to add a move onto the board, or attempt to add a move
   const addMove = (player, location, label) => {
     if (endGame === false){
-      //If the player is the computer, change the turntracker and update the board index, as well as the UI.
+      //If the player is the computer, change the turntracker and update the location on boardPositions array, as well as the UI.
       if (player.name == 'demagotron'){
           turnTracker = false;
           boardPositions[location] = label;
           updateBoard(player, boardPositions, location, label);
   
       }
-      //If the player is the user and the board item is not taken, update it and update the UI.
+      //If the player is the user and the board item is not taken, update the location on boardPositions array and update the UI.
       if (player.name != 'demagotron'){
         if(gridItem[location].innerHTML.length == 0){
         turnTracker = true;
