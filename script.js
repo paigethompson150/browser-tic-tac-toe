@@ -66,15 +66,15 @@ const gameBoard = (() => {
       gridItem[location].innerHTML = label;
     }
     if (checkForWinner() == true){
-        console.log(player.name + 'wins');
-      //  endGame = true;
-       // showRestart();
+        showWinner(player.name);
+        endGame = true;
+        showRestart();
     }
     else {
       if (checkForTie() == true){
-        console.log('its a tie!');
-      //  endGame = true;
-      //  showRestart();
+        showWinner('tie');
+        endGame = true;
+        showRestart();
       }
     }
   }
@@ -118,12 +118,18 @@ const gameBoard = (() => {
       gridItem[a].innerHTML = '';
     }
 
+    //Hide the refresh button again.
+    restart.classList.add('hidden');
+    restart.classList.remove('fade-in');
+
     //Sets trackers back to their defaults.
     endGame = false;
     turnTracker = false;
 
-    //Hide the refresh button again.
-    restart.classList.add('hidden');
+    //Hides the winner and refreshes the innerhtml
+    announceWinner.classList.add('hidden');
+    announceWinner.classList.remove('fade-in');
+    announceWinner.innerHTML = '';
   }
   return {
     addMove,
@@ -154,6 +160,17 @@ function showRestart(){
   restart.classList.add('fade-in');
 }
 
+function showWinner(winner){
+  if (winner == 'tie'){
+    announceWinner.innerHTML = "It's a tie game!";
+  }
+  else {
+    announceWinner.innerHTML = `${winner} has won!`;
+  }
+  announceWinner.classList.add('fade-in');
+  announceWinner.classList.remove('hidden');
+}
+
 //Returns the empty index positions on the board.
 function availablePositions(boardPositions){
   return boardPositions.filter(s => typeof s == 'number');
@@ -162,56 +179,59 @@ function availablePositions(boardPositions){
 function bestSpot(){
   //return a random available square
   let emptySpots = availablePositions(boardPositions);
-  let bestScore = -1000;
+
+  /*
+  let bestScore = 0;
   let bestMove = 0;
 
   for (k = 0; k < emptySpots.length; k++){
-    newLocation = emptySpots[k];
 
+    newLocation = emptySpots[k];
     boardPositions[newLocation] = 'o';
-    score = minimax(boardPositions,0,false);
-    boardPositions[newLocation] = location;
+    score = minimax(boardPositions,true);
+    boardPositions[newLocation] = newLocation;
+
 
     if(score > bestScore){
       bestScore = score;
       bestMove = newLocation;
     }
   }
-  return bestMove;
-  //return emptySpots[Math.floor(Math.random()*emptySpots.length)];
+  return bestMove;*/
+  return emptySpots[Math.floor(Math.random()*emptySpots.length)];
 }
 
 function minimax(boardPositions, isMaximizing){
-  if (gameBoard.checkForWinner() && turnTracker == true){
-    return 100;
+  if (gameBoard.checkForWinner() && (isMaximizing == true)){
+    return 1;
   }
-  else if (gameBoard.checkForWinner() && turnTracker == false){
-    return -100;
+  else if (gameBoard.checkForWinner() && (isMaximizing == false)){
+    return -1;
   }
   else if (gameBoard.checkForTie()){
     return 0;
   }
   let emptySpots = availablePositions(boardPositions);
-  if (isMaximizing){
-    let bestScore = -1000;
+  if (isMaximizing == false){
+    let bestScore = 0;
     for (k = 0; k < emptySpots.length; k++){
       newLocation = emptySpots[k];
   
-      boardPositions[newLocation] = 'x';
+      boardPositions[newLocation] = 'o';
       score = minimax(boardPositions,false);
       boardPositions[newLocation] = location;
-      if(score > bestScore){
+      if(score < bestScore){
         bestScore = score;
       }
     }
     return bestScore;
   }
   else{
-    let bestScore = 800;
+    let bestScore = 0;
     for (k = 0; k < emptySpots.length; k++){
       newLocation = emptySpots[k];
   
-      boardPositions[newLocation] = 'o';
+      boardPositions[newLocation] = 'x';
       score = minimax(boardPositions,true);
       boardPositions[newLocation] = location;
       if(score < bestScore){
@@ -236,7 +256,10 @@ let gridItem = document.querySelectorAll('.gridItem');
   }
 
 let restart = document.getElementById('restartButton');
-restart.addEventListener('click', gameBoard.clearGameBoard)
+restart.addEventListener('click', gameBoard.clearGameBoard);
+
+let announceWinner = document.getElementById('winner_announcement');
+
 
 const introGraphic = document.querySelector('.intro');
 const gameBoardUI = document.getElementById('gameBoard');

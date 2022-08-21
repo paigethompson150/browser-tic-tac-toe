@@ -1,16 +1,32 @@
 html {
   height: 100vh;
   width: 100vw;
+ /* background-image: url('https://i.pinimg.com/736x/f3/1a/75/f31a75955393277b4e13343f74a0624d.jpg');*/
+  background-image: url('https://media.istockphoto.com/vectors/graph-paper-background-vector-blue-plotting-millimeter-drawing-ruler-vector-id871208872?b=1&k=20&m=871208872&s=170667a&w=0&h=wEU2XaVURUKaA1uve6hvD44rwM5Q-w9Nju_XKAqtMUI=');
 }
+
+@font-face{
+  font-family: dorkDiary;
+  src: url('Dpdorkdiary-P267.ttf');
+}
+
 *{
-  font-family: 'Roboto', sans-serif;
+  font-family: dorkDiary;
 }
 
 .intro{
   text-align: center;
+  font-size: 1.3em;
 }
 
-
+#winner_announcement{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  top: 150px;
+  font-size: 2.5em;
+}
 
 
 /* slide-in effect */
