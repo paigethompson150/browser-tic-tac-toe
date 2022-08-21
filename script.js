@@ -266,5 +266,5 @@ const gameBoardUI = document.getElementById('gameBoard');
 document.addEventListener('click', showBoard);
 
 
-const user = player('paige', 'x');
+const user = player('human', 'x');
 const computer = player('demagotron', 'o');
